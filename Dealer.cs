@@ -11,6 +11,11 @@ namespace blackjackconsole
         public static int total; // total of the cards
         public static void GiveCards()
         {
+            for (int i = 0; i < deck.Length; i++)
+            {
+                deck[i] = 0;
+            }
+
             var r = new Random();
 
             var card1 = r.Next(1, 11);
@@ -34,14 +39,22 @@ namespace blackjackconsole
 
             var card1 = r.Next(1, 11);
 
-            for(int item = 0; item <= 5; item++) // checking to what position of the array to set the new card in.
+            try // i believe try catching is a bit like cheating but whatever lol
             {
-                if(deck[item] == 0) // if the position in the array is 0, that means its empty
+                for(int item = 0; item <= 5; item++) // i basically copied this from the Dealer.cs file (i lied its the other way around)
                 {
-                    deck[item] = card1; // setting the card in the array
-                    total += card1; // adding the card to the total
-                    break;
+                    if(deck[item] == 0)
+                    {
+                        deck[item] = card1;
+                        total += card1;
+                        break;
+                    }
                 }
+            }
+            catch (IndexOutOfRangeException) // if the deck is full
+            {
+                Stand();
+                return;
             }
 
             total = GetAllArrayInt(deck); // getting the total of the array (i have no idea why i do this but its there just in case)
@@ -49,7 +62,7 @@ namespace blackjackconsole
             Console.WriteLine($"The dealer got {card1} for a total of {total}"); // he got the card doe :skull:
             if (HasBusted()) { // check if the dealer has busted, if yes, he loses
                 Console.WriteLine("The dealer busted!");
-                Program.Lose();
+                Game.Lose();
             }
 
             if (Player.total > total && !HasBusted()) { // if the player has a higher total than the dealer and the dealer hasnt busted, try to hit again
@@ -62,7 +75,7 @@ namespace blackjackconsole
         public static void Stand() // so i guess i should just use Program.Lose???
         {
             //Console.WriteLine($"The dealer with a total of {total}");
-            Program.Lose();
+            Game.Lose();
         }
 
         public static void RevealCards() // print out dealers cards

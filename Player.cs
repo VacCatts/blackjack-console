@@ -8,6 +8,10 @@ namespace blackjackconsole
         public static int total; // total of the cards (again)
         public static void GiveCards() // so the function gives the first 2 cards, theres def a better way to do it but i cba lol
         {
+            for (int i = 0; i < deck.Length; i++)
+            {
+                deck[i] = 0;
+            }
             var r = new Random();
 
             var card1 = r.Next(1, 11);
@@ -27,14 +31,22 @@ namespace blackjackconsole
 
             var card1 = r.Next(1, 11);
 
-            for(int item = 0; item <= 5; item++) // i basically copied this from the Dealer.cs file (i lied its the other way around)
+            try // i believe try catching is a bit like cheating but whatever lol
             {
-                if(deck[item] == 0)
+                for(int item = 0; item <= 5; item++) // i basically copied this from the Dealer.cs file (i lied its the other way around)
                 {
-                    deck[item] = card1;
-                    total += card1;
-                    break;
+                    if(deck[item] == 0)
+                    {
+                        deck[item] = card1;
+                        total += card1;
+                        break;
+                    }
                 }
+            }
+            catch (IndexOutOfRangeException) // if the deck is full
+            {
+                Console.WriteLine("You have already hit 3 times");
+                return;
             }
 
             total = GetAllArrayInt(deck);
@@ -43,7 +55,7 @@ namespace blackjackconsole
 
             if (HasBusted()) { // if the player has busted, he loses (no shit sherlock)
                 Console.WriteLine("You busted!");
-                Program.Lose();
+                Game.Lose();
             }
         }
 

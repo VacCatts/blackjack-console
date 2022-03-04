@@ -1,5 +1,4 @@
-﻿using System;
-using blackjackconsole;
+using System;
 
 namespace blackjackconsole
 {
@@ -7,57 +6,84 @@ namespace blackjackconsole
     {
         static void Main()
         {
-            // give the player and dealer their two cards
-            Player.GiveCards();
-            Dealer.GiveCards();
-
-            // and then ask the player for input
-            AskForInput();
+            SaveData.Init();
+            MainMenu();
         }
 
-        static void AskForInput() // this scuffed ass input function :skull:
-        {
-            if (Player.HasBusted() && Dealer.HasBusted()) // if any of the players have busted, lose function
-                Lose();
-            Console.WriteLine("What would you like to do?"); // ask the player what they want to do
-            Console.WriteLine("1. Hit");
-            Console.WriteLine("2. Stand");
+        public static void MainMenu() { // bless github copilot it just made this function by itself B)
+            Console.WriteLine("Welcome to Blackjack!");
+            Console.WriteLine("1. Play");
+            Console.WriteLine("2. Stats");
             Console.WriteLine("3. Exit");
-            var option = Console.ReadKey(); // get those mf keys :skull:
+            var option = Console.ReadKey();
 
-            switch (option.KeyChar) // holy god im so happy i used a switch instead of an if so i dont get called yandev v2
+            switch (option.KeyChar)
             {
                 case '1':
-                    Player.Hit();
-                    AskForInput();
+                    SaveData.Save();
+                    SetBet();
+                    Game.Run();
                     break;
                 case '2':
-                    Player.Stand();
+                    SaveData.Save();
+                    Stats();
                     break;
                 case '3':
-                    Environment.Exit(0); // :trolley:
+                    SaveData.Save();
+                    Environment.Exit(0);
                     break;
                 default:
-                    Console.WriteLine("Invalid input"); // invalid input :skull:
-                    AskForInput();
+                    Console.WriteLine("Invalid input");
+                    MainMenu();
                     break;
             }
         }
 
-        public static void Lose() {
-            if (Player.total > Dealer.total && !Player.HasBusted() || Dealer.HasBusted()) // if players total is more than dealers total and player hasnt busted, or the dealer has busted
+        public static void AskForRestart() { // i might just use the main menu function instead :skull:, ill let it slip for now
+            Console.Write("\n\n");
+            Console.WriteLine("Would you like to play again?");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+            var option = Console.ReadKey();
+
+            switch (option.KeyChar)
             {
-                Console.WriteLine("You win!");
+                case '1':
+                    Program.SetBet();
+                    Console.Write("\n\n\n\n\n\n\n\n\n");
+                    Game.Run();
+                    break;
+                case '2':
+                    MainMenu();
+                    Console.Write("\n\n\n\n\n\n\n\n\n");
+                    break;
+                default:
+                    Console.WriteLine("Invalid input");
+                    AskForRestart();
+                    break;
             }
-            else if (Player.total < Dealer.total && !Dealer.HasBusted() || Player.HasBusted()) // if players total is less than dealers total and dealer hasnt busted, or the player has busted
-            {
-                Console.WriteLine("You lose!");
+        }
+
+        public static void SetBet() { // i love github copilot
+            Console.WriteLine("How much would you like to bet?");
+            int bet2 = Convert.ToInt32(Console.ReadLine());
+            if (bet2 > SaveData.cash) {
+                Console.WriteLine("You don't have enough money!");
+                SetBet();
             }
-            else // push
-            {
-                Console.WriteLine("Push!");
+            else {
+                SaveData.bet = bet2;
+                SaveData.cash -= bet2;
+                return;
             }
-            Environment.Exit(0); // TODO: replace this with a restart / main menu function
+        }
+
+        public static void Stats() {
+            Console.WriteLine("Cash: " + SaveData.cash);
+            Console.WriteLine("Wins: " + SaveData.wins);
+            Console.WriteLine("Losses: " + SaveData.losses);
+            Console.WriteLine("Pushes: " + SaveData.pushes);
+            MainMenu();
         }
     }
 }
