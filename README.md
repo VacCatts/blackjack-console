@@ -1,4 +1,5 @@
-# blackjack-console
-blackjack for the console to feed my gambling addiction
+# blackjack console
+text-based blackjack 👍
 
-made in C# using dotnet core (cross-compability wooo)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-energy-drinks.svg)](https://forthebadge.com)
